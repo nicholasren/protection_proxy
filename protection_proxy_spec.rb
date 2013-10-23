@@ -12,7 +12,9 @@ describe ProtectionProxy do
     end
   end
 
-  class ProtectedUser < ProtectionProxy
+  class ProtectedUser
+    extend ProtectionProxy
+
     role :owner do
       writable :membership_level
     end
