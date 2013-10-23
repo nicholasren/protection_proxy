@@ -12,22 +12,13 @@ describe ProtectionProxy do
     end
   end
 
-  class ProtectedUser < ProtectionProxy
-    role :owner do
-      writable :membership_level
-    end
-
-    role :browser do
-      writable :name
-      writable :email
-    end
-  end
-
+  ProtectionProxy.writable(:owner, [:membership_level])
+  ProtectionProxy.writable(:browser, [:name, :email])
 
   Given(:user) {User.new("Jim", "jim@somewhere.com", "Beginner")}
 
   context "when user is the owner role" do
-    Given(:proxy){ProtectedUser.find_proxy(user, :owner)}
+    Given(:proxy){ProtectionProxy.create_proxy(user, :owner)}
 
     Then{user.name.should == "Jim"}
 
@@ -42,13 +33,17 @@ describe ProtectionProxy do
       end
   end
 
-
   context "when user is the brower role" do
-    Given(:proxy) {ProtectedUser.find_proxy(user, :browser)}
+    Given(:proxy) {ProtectionProxy.create_proxy(user, :browser)}
 
     context "when I change a writable attribute" do
       When { proxy.name = "Joe" }
       Then { proxy.name.should == "Joe" }
+    end
+
+    context "when I change a writable attribute" do
+      When { proxy.email= "joe@gmail.com" }
+      Then { proxy.email.should == "joe@gmail.com" }
     end
 
     context "when I change a protected attribute" do
