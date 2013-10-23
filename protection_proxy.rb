@@ -37,4 +37,4 @@ class ProtectionProxy
   def field_name_from method_name
     method_name[0...-1].to_sym
   end
-require File.expand_path('../protection_proxy', __FILE__)end
+end
